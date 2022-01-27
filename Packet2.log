@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2022.1.27)  27 JAN 2022 13:41
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2022.1.27)  27 JAN 2022 14:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -861,7 +861,7 @@ Overfull \hbox (12.01646pt too wide) in paragraph at lines 217--218
 File: Packet2_files/figure-latex/boxplot2-1.pdf Graphic file (type pdf)
 <use Packet2_files/figure-latex/boxplot2-1.pdf>
 
-Overfull \hbox (12.01646pt too wide) in paragraph at lines 242--243
+Overfull \hbox (12.01646pt too wide) in paragraph at lines 245--246
 [][]  
  []
 
@@ -935,9 +935,9 @@ ing=tex-text;"
 p;mapping=tex-text;"
 
 LaTeX Font Info:    Font shape `TU/LibertinusSans(1)/m/n' will be
-(Font)              scaled to size 9.3695pt on input line 244.
+(Font)              scaled to size 9.3695pt on input line 247.
 LaTeX Font Info:    Font shape `TU/LibertinusSans(1)/m/sc' will be
-(Font)              scaled to size 9.3695pt on input line 244.
+(Font)              scaled to size 9.3695pt on input line 247.
 [2]
 
 Package bibentry Warning: You have used \nobibliography* 

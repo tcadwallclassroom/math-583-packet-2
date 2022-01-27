@@ -76,15 +76,23 @@ A couple of things are going on here: First, notice that we needed to add "error
 
 Second, notice that we set `coef = 10`. What does that mean? 
 
-Third, notice that we have values on a vertical axis. We can suppress those with the following code: 
+Third, notice that we have values on a vertical axis. These are meaningless, we can suppress those with the following code: 
 
 ```{r boxplot2}
 county %>% na.omit(poverty) %>% ggplot(aes(x = poverty)) +
   stat_boxplot(geom = "errorbar") + 
   geom_boxplot() +
-  theme(axis.title.y = element_blank(), 
-        axis.text.y = element_blank(), 
-        axis.ticks.y = element_blank()) 
+  labs(title = "Poverty Rates of U.S. Counties",
+       y = NULL, 
+       x = "Poverty rate",
+       subtitle = "Percentage of residents living in poverty",
+       caption = "Source: county dataset") +
+  scale_y_continuous(breaks = NULL, labels = NULL)
 ```
 
-Also notice I left off `coef = 10` this time.
+Also notice I left off `coef = 10` this time. Most of the highest-poverty counties are considered outliers, as they are more that 1.5 times the IQR away from the median. The `coef` variable changes the number of multiples of the IQR we need to be from the median before we call something an outlier. Use `help(geom_boxplot)` for more.
+
+
+
+
+
