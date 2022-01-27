@@ -4,11 +4,11 @@ runningheader: "Math 583 Packet 2" # only for pdf output
 author: "Todd CadwalladerOlsker"
 date: "`r Sys.Date()`"
 output:
+  tufte::tufte_html:
+    tufte_variant: "envisioned"
   tufte::tufte_handout:
     citation_package: natbib
     latex_engine: xelatex
-  tufte::tufte_html:
-    tufte_variant: "envisioned"
 mainfont: Libertinus Sans
 header-includes: |
     \usepackage{parskip}
