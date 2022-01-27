@@ -18,11 +18,14 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 library(tufte)
 library(openintro)
 library(tidyverse)
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 ```
+
+*A .pdf copy of this packet is available at <Packet2.pdf>.*
 
 # Descriptive Statistics
 
@@ -44,17 +47,44 @@ Here, the `na.rm = TRUE` tells R to ignore values that have missing data. (Try t
 
 Now, a *measure of central tendency* like the median is not worth very much without a *measure of spread* to go along with it. For the median, one way to get a handle on the spread is to also report the maximum, minimum, and 1st and 3rd quartile values. Together, these are called a *five-number summary*. 
 
-```{r fivenum}
-fivenum(county$poverty) # The pop2010 variable doesn't have any missing data, so we can skip the na.rm = TRUE command.
+```{marginfigure} 
+Recall that the 1st quartile is the "median" of the minimum value and the median, while the 3rd quartile is the "median" of the maximum value and the median.
+```
 
-summary(county$poverty) # Is a little friendlier to the eyes, and also includes the mean.
+```{r fivenum}
+fivenum(county$poverty) 
+  # The pop2010 variable doesn't have 
+  # any missing data, so we can skip the 
+  # na.rm = TRUE command. test
+
+summary(county$poverty) 
+  # Is a little friendlier to the eyes, 
+  # and also includes the mean.
 ```
 
 We can visualize the five number summary as a plot:
 
 ```{r boxplot1}
-county %>% ggplot(aes(x = poverty)) +
-  geom_boxplot(geom = "errorbar")
+county %>% na.omit(poverty) %>% ggplot(aes(x = poverty)) +
+  stat_boxplot(coef = 10, geom = "errorbar") + 
+  geom_boxplot(coef = 10)
 ```
 
-A couple of things are going on here: First, notice that there are some "dots" happening. 
+Traditionally, the boxplot includes vertical lines for each of the five numbers in the summary.
+
+A couple of things are going on here: First, notice that we needed to add "error bars" to visualize the whiskers, gglot does not include them as standard. 
+
+Second, notice that we set `coef = 10`. What does that mean? 
+
+Third, notice that we have values on a vertical axis. We can suppress those with the following code: 
+
+```{r boxplot2}
+county %>% na.omit(poverty) %>% ggplot(aes(x = poverty)) +
+  stat_boxplot(geom = "errorbar") + 
+  geom_boxplot() +
+  theme(axis.title.y = element_blank(), 
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank()) 
+```
+
+Also notice I left off `coef = 10` this time.

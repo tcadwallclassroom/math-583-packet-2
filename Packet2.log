@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2022.1.27)  27 JAN 2022 13:10
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2022.1.27)  27 JAN 2022 13:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -824,50 +824,46 @@ LaTeX Font Info:    Font shape `TU/LibertinusSans(0)/m/it' will be
 (Font)              scaled to size 14.467pt on input line 117.
 LaTeX Font Info:    Font shape `TU/LibertinusSans(0)/m/it' will be
 (Font)              scaled to size 12.05585pt on input line 117.
-LaTeX Font Info:    Font shape `TU/LibertinusSans(0)/m/n' will be
-(Font)              scaled to size 11.24341pt on input line 123.
 LaTeX Font Info:    Font shape `TU/LibertinusSans(0)/m/it' will be
-(Font)              scaled to size 10.04654pt on input line 125.
+(Font)              scaled to size 10.04654pt on input line 123.
 LaTeX Font Info:    Font shape `TU/LibertinusSans(0)/m/n' will be
-(Font)              scaled to size 7.4956pt on input line 131.
+(Font)              scaled to size 11.24341pt on input line 126.
 LaTeX Font Info:    Font shape `TU/LibertinusSans(0)/m/n' will be
-(Font)              scaled to size 6.55865pt on input line 134.
+(Font)              scaled to size 7.4956pt on input line 134.
 LaTeX Font Info:    Font shape `TU/LibertinusSans(0)/m/n' will be
-(Font)              scaled to size 4.68475pt on input line 134.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 134
+(Font)              scaled to size 6.55865pt on input line 137.
+LaTeX Font Info:    Font shape `TU/LibertinusSans(0)/m/n' will be
+(Font)              scaled to size 4.68475pt on input line 137.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 137
 .
 (c:/texlive/2021/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 134
+LaTeX Font Info:    Trying to load font information for U+msb on input line 137
 .
 (c:/texlive/2021/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Font shape `TU/LibertinusSans(0)/m/n' will be
-(Font)              scaled to size 10.2596pt on input line 137.
+(Font)              scaled to size 10.2596pt on input line 140.
 LaTeX Font Info:    Font shape `TU/LibertinusSans(0)/m/it' will be
-(Font)              scaled to size 11.00095pt on input line 137.
-
-Overfull \hbox (60.75pt too wide) in paragraph at lines 202--202
-[]\TU/lmtt/m/n/10 ## Warning: Removed 2 rows containing non-finite values (stat
-_boxplot).[] 
- []
-
-File: Packet2_files/figure-latex/boxplot1-1.pdf Graphic file (type pdf)
-<use Packet2_files/figure-latex/boxplot1-1.pdf>
-
-Overfull \hbox (12.01646pt too wide) in paragraph at lines 204--205
-[][]  
- []
-
+(Font)              scaled to size 11.00095pt on input line 140.
 [1
 
 ]
+File: Packet2_files/figure-latex/boxplot1-1.pdf Graphic file (type pdf)
+<use Packet2_files/figure-latex/boxplot1-1.pdf>
 
-Package bibentry Warning: You have used \nobibliography* 
-(bibentry)                without a following \bibliography.
-(bibentry)                You may not be able to run BibTeX.
+Overfull \hbox (12.01646pt too wide) in paragraph at lines 217--218
+[][]  
+ []
+
+File: Packet2_files/figure-latex/boxplot2-1.pdf Graphic file (type pdf)
+<use Packet2_files/figure-latex/boxplot2-1.pdf>
+
+Overfull \hbox (12.01646pt too wide) in paragraph at lines 242--243
+[][]  
+ []
 
 
 Package fontspec Info: Libertinus Sans scale = 0.9369450055893347.
@@ -939,20 +935,29 @@ ing=tex-text;"
 p;mapping=tex-text;"
 
 LaTeX Font Info:    Font shape `TU/LibertinusSans(1)/m/n' will be
-(Font)              scaled to size 9.3695pt on input line 211.
+(Font)              scaled to size 9.3695pt on input line 244.
 LaTeX Font Info:    Font shape `TU/LibertinusSans(1)/m/sc' will be
-(Font)              scaled to size 9.3695pt on input line 211.
-[2] (./Packet2.aux)
+(Font)              scaled to size 9.3695pt on input line 244.
+[2]
+
+Package bibentry Warning: You have used \nobibliography* 
+(bibentry)                without a following \bibliography.
+(bibentry)                You may not be able to run BibTeX.
+
+
+Package fontspec Info: Libertinus Sans scale = 0.9369450055893347.
+
+[3] (./Packet2.aux)
 Package rerunfilecheck Info: File `Packet2.out' has not changed.
 (rerunfilecheck)             Checksum: C342D6B0727A2817C2E187F119C419C3;157.
  ) 
 Here is how much of TeX's memory you used:
- 17104 strings out of 476191
- 323208 string characters out of 5813342
- 699174 words of memory out of 5000000
- 37512 multiletter control sequences out of 15000+600000
+ 17114 strings out of 476191
+ 323646 string characters out of 5813342
+ 700174 words of memory out of 5000000
+ 37521 multiletter control sequences out of 15000+600000
  471937 words of font info for 64 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 108i,12n,133p,1196b,515s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 108i,12n,132p,1196b,515s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on Packet2.pdf (2 pages).
+Output written on Packet2.pdf (3 pages).
