@@ -1,0 +1,7 @@
+<p>Recall that the 1st quartile is the “median” of the minimum value and the median, while the 3rd quartile is the “median” of the maximum value and the median… sort of. In fact, it’s actually silghtly more complicated than that. For example, consider the simple example of the data</p>
+<p><span class="math display">\[1,2,3,4,5,6,7,8,9,10,11\]</span></p>
+<p>The median is 6, but what should the first quartile be? Should we include 6, and get a median of 3.5, or exclude it, at get a median of 3? Try <code>fivenum(c(1:11))</code> or <code>summary(c(1:11))</code> and see what R does!</p>
+<p>Now try both of the following:</p>
+<p><code>fivenum(c(1:10))</code></p>
+<p><code>summary(c(1:10))</code></p>
+<p>Do these give different results?</p>
