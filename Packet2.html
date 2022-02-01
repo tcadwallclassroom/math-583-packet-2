@@ -12,7 +12,7 @@
 
 <meta name="author" content="Todd CadwalladerOlsker" />
 
-<meta name="date" content="2022-01-29" />
+<meta name="date" content="2022-01-31" />
 
 <title>Packet 2</title>
 
@@ -59,7 +59,7 @@ if (window.hljs) {
 
 <h1 class="title toc-ignore">Packet 2</h1>
 <h4 class="author">Todd CadwalladerOlsker</h4>
-<h4 class="date">2022-01-29</h4>
+<h4 class="date">2022-01-31</h4>
 
 
 
@@ -108,15 +108,52 @@ summary(county$poverty)
 <p>In many cases, the <em>mean</em> is a more useful measurement than the median. In many other cases the median is more useful – it depends on the situation. The mean is the sum of the values of our data points, divided by the number of data points – exactly how you learned to calculate the average since forever. The calculation is the same whether we want to calculate a population mean or sample mean.</p>
 <p><label for="tufte-mn-4" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-4" class="margin-toggle"><span class="marginnote"><span style="display: block;">The mean is more useful in the sense that we can do a lot more with it, but it is not as <em>robust</em> as the median. It’s much more sensitive to outliers and skewed data.</span></span></p>
 <p>The natural measure of spread to pair with the mean is the <em>variance</em>, or the <em>standard deviation</em>. The definition of variance starts with a natural idea: let’s measure the distance between the value of each data point and the mean (this is the <em>deviation from the mean</em> or just <em>deviation</em> of each data point). Then, we could find the average deviation.</p>
-<p>Let’s try this out: suppose we have sample data of <span class="math display">\[2,2,3,7,8,9\]</span></p>
-<p>In R, we can save this as a vector, then make it a data frame that we can manipulate with <code>dplyr</code>:</p>
-<pre class="r"><code>sample_data &lt;- data.frame(c(2,2,3,7,8,9))
-colnames(sample_data) &lt;- &quot;Value&quot;
-sample_data &lt;- sample_data %&gt;% 
-  mutate(Deviation = Value - mean(sample_data$Value))
-mean(sample_data$Deviation) %&gt;% round(15)</code></pre>
-<p><label for="tufte-mn-5" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-5" class="margin-toggle"><span class="marginnote"><span style="display: block;">Note the use of <code>round</code> in the last command; here we are rounding to 15 digits. If you just use <code>mean()</code> in the last step, you will get a very small number in scientific notation. The actual value of the mean is in fact 0, but you are seeing a very small number due to a <em>floating point error</em> in R. These are very common in any programming language, and dealing with them is a necessary evil.</span></span></p>
-<p>You should find that the mean deviation is 0! The positive deviations are cancelled out by the negative deviations. This will always happen in any data set, since the average value of the data points is 0 units away from the average. Therefore, this is not a very useful measurement of spread. So what can we do?</p>
+<p>Let’s try this out: suppose we are looking at the population of people in this class, and we are interested in each person’s height in inches. We want to know the mean, then calculate the average deviation.</p>
+<p>In R, we can try the following:</p>
+<pre class="r"><code>Height&lt;- c(...data goes here...)
+  # Enter values in the &quot;c&quot; function, separated by commas
+class_height &lt;- data.frame(Height) 
+mean(class_height$Height)
+class_height &lt;- class_height %&gt;% 
+  mutate(Deviation = Height - mean(class_height$Height))
+mean(class_height$Deviation) %&gt;% round(14)</code></pre>
+<p><label for="tufte-mn-5" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-5" class="margin-toggle"><span class="marginnote"><span style="display: block;">Note the use of <code>round</code> in the last command; here we are rounding to 14 digits. If you just use <code>mean()</code> in the last step, you will get a very small number in scientific notation. The actual value of the mean is in fact 0, but you are seeing a very small number due to a <em>floating point error</em> in R. These are very common in any programming language, and dealing with them is a necessary evil.</span></span></p>
+<p>You should find that the mean deviation is 0! The positive deviations are cancelled out by the negative deviations. This will always happen in any data set, since the average value of the data points is 0 units away from the average. Therefore, this is not a very useful measurement of spread.</p>
+<p>So what can we do? We’ll <em>square</em> the deviations, so that they are all positive! Then, we can take the mean squared deviation, AKA the <em>variance</em>. Finally, the square root of the variance gives us the <em>standard deviation</em>.</p>
+<p><label for="tufte-mn-6" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-6" class="margin-toggle"><span class="marginnote"><span style="display: block;">You might be wondering why we square the deviations, then take the square root of the mean of those deviations, rather than taking the absolute values. We could do that – in fact, there is a measure called the <em>mean absolute deviation (MAD)</em>. It’s a perfectly fine statistic, but is not as commonly used, as it doesn’t have some of the nice mathematical properties that the standard deviation has.</span></span></p>
+<pre class="r"><code>class_height &lt;- class_height %&gt;% 
+  mutate(Sq_Deviation = Deviation^2)
+mean(class_height$Sq_Deviation) 
+mean(class_height$Sq_Deviation) %&gt;% sqrt()</code></pre>
+<p>Of course, there is an R command that gets us the standard deviation directly. Try</p>
+<pre class="r"><code>sd(class_height$Height)</code></pre>
+<p>Notice that we get a slightly different answer than we expected! More on that in a moment.</p>
+<p>To summarize, given a population of <span class="math inline">\(n\)</span> with a numeric value <span class="math inline">\(x_i\)</span> for each member of the population, we can calculate the mean: <span class="math display">\[\mu = \frac{\sum_{i=1}^{n} x_i}{n}\]</span> the variance: <span class="math display">\[\sigma^2 = \frac{\sum_{i=1}^{n} (x_i-\mu)^2}{n}\]</span> and the standard deviation: <span class="math display">\[\sigma = \sqrt{\frac{\sum_{i=1}^{n} (x_i-\mu)^2}{n}}\]</span></p>
+<p>However, if we have a <em>sample</em> of a population, we can only calculate a sample mean and sample variance (and the corresponding sample standard deviation to go with it.) When we collect a sample, we use the sample mean to <em>estimate</em> the population mean. Fortunately, this is very intuitive. Given a sample of <span class="math inline">\(n\)</span> members of the population, each with numeric value <span class="math inline">\(x_i\)</span>, the sample mean <span class="math display">\[\bar{x}=\frac{\sum_{i=1}^{n} x_i}{n}\]</span> is a perfectly good estimate for the population mean.</p>
+<p>If we calculate the sample variance in the same way, we get: <span class="math display">\[s^{2*} = \frac{\sum_{i=1}^{n} (x_i-\bar{x})^2}{n}\]</span></p>
+<p>However, this is <em>not</em> the best estimate for the population standard deviation. In fact, this is a <em>biased</em> estimate: this estimate is always too small!</p>
+<p>To see this, let’s prove the following theorem. Look at the proof steps below, and see if you can justify each step.</p>
+<p><em>Theorem:</em> Given any sample of <span class="math inline">\(n\)</span> values taken from a population, <span class="math inline">\(x_1, x_2, \ldots, x_n\)</span>, then <span class="math display">\[\sum_{i=1}^{n} (x_i-\bar{x})^2 \leq \sum_{i=1}^{n} (x_i-\mu)^2\]</span></p>
+<p><label for="tufte-mn-7" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-7" class="margin-toggle"><span class="marginnote"><span style="display: block;">This is the same statement, but with both sides multiplied by <span class="math inline"><span class="math inline">\(n\)</span></span> to make our lives a bit easier.</span></span></p>
+<ol style="list-style-type: decimal">
+<li><p>We can write <span class="math display">\[\sum_{i=1}^{n} (x_i-\bar{x})^2=\sum_{i=1}^{n} (x_i-\mu+\mu-\bar{x})^2.\]</span> Why?</p></li>
+<li><p>Now, we have <span class="math display">\[\sum_{i=1}^{n} (x_i-\bar{x})^2 = \sum_{i=1}^{n} (x_i-\mu)^2+ 2 \sum_{i=1}^{n} (x_i-\mu)(\mu-\bar{x}) + \sum_{i=1}^{n} (\mu-\bar{x})^2.\]</span> Why?</p></li>
+<li><p>With a bit of algebra, we get: <span class="math display">\[\sum_{i=1}^{n} (x_i-\bar{x})^2 = \sum_{i=1}^{n} (x_i-\mu)^2+ 2 (\mu-\bar{x}) \sum_{i=1}^{n} (x_i-\mu) + n (\mu-\bar{x})^2. \]</span> Now, looking at the middle term on the right hand side, we have:</p></li>
+</ol>
+<p><span class="math display">\[\begin{align*}
+2 (\mu-\bar{x}) \sum_{i=1}^{n} (x_i-\mu) &amp;= 2(\mu-\bar{x})\left(\sum_{i=1}^n x_i - \sum_{i=1}^n \mu \right)\\
+&amp;=2(\mu-\bar{x})(n\bar{x}-n\mu)\\
+&amp;=-2n(\bar{x}-\mu)^2
+\end{align*}\]</span></p>
+<p>Explain why the last two steps of the algebra work.</p>
+<ol start="4" style="list-style-type: decimal">
+<li>Finally, we now have:</li>
+</ol>
+<p><span class="math display">\[\begin{align*}
+\sum_{i=1}^{n} (x_i-\bar{x})^2 &amp;= \sum_{i=1}^{n} (x_i-\mu)^2 - 2n(\bar{x}-\mu)^2 + n (\mu-\bar{x})^2 \\
+&amp;= \sum_{i=1}^{n} (x_i-\mu)^2 - n(\bar{x}-\mu)^2 
+\end{align*}\]</span></p>
+<p>This finishes the proof of the theorem. Why?</p>
 </div>
 </div>
 
