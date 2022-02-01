@@ -123,21 +123,71 @@ The mean is more useful in the sense that we can do a lot more with it, but it i
 
 The natural measure of spread to pair with the mean is the *variance*, or the *standard deviation*. The definition of variance starts with a natural idea: let's measure the distance between the value of each data point and the mean (this is the *deviation from the mean* or just *deviation* of each data point). Then, we could find the average deviation. 
 
-Let's try this out: suppose we have sample data of 
-\[2,2,3,7,8,9\]
+Let's try this out: suppose we are looking at the population of people in this class, and we are interested in each person's height in inches. We want to know the mean, then calculate the average deviation. 
 
-In R, we can save this as a vector, then make it a data frame that we can manipulate with `dplyr`:
+In R, we can try the following:
 
 ```{r data_ex1}
-sample_data <- data.frame(c(2,2,3,7,8,9))
-colnames(sample_data) <- "Value"
-sample_data <- sample_data %>% 
-  mutate(Deviation = Value - mean(sample_data$Value))
-mean(sample_data$Deviation) %>% round(15)
+Height<- c(...data goes here...)
+  # Enter values in the "c" function, separated by commas
+class_height <- data.frame(Height) 
+mean(class_height$Height)
+class_height <- class_height %>% 
+  mutate(Deviation = Height - mean(class_height$Height))
+mean(class_height$Deviation) %>% round(14)
 ```
 
 ```{marginfigure}
-Note the use of `round` in the last command; here we are rounding to 15 digits. If you just use `mean()` in the last step, you will get a very small number in scientific notation. The actual value of the mean is in fact 0, but you are seeing a very small number due to a *floating point error* in R. These are very common in any programming language, and dealing with them is a necessary evil.
+Note the use of `round` in the last command; here we are rounding to 14 digits. If you just use `mean()` in the last step, you will get a very small number in scientific notation. The actual value of the mean is in fact 0, but you are seeing a very small number due to a *floating point error* in R. These are very common in any programming language, and dealing with them is a necessary evil.
 ```
 
-You should find that the mean deviation is 0! The positive deviations are cancelled out by the negative deviations. This will always happen in any data set, since the average value of the data points is 0 units away from the average. Therefore, this is not a very useful measurement of spread. So what can we do?
+You should find that the mean deviation is 0! The positive deviations are cancelled out by the negative deviations. This will always happen in any data set, since the average value of the data points is 0 units away from the average. Therefore, this is not a very useful measurement of spread. 
+
+So what can we do? We'll *square* the deviations, so that they are all positive! Then, we can take the mean squared deviation, AKA the *variance*. Finally, the square root of the variance gives us the *standard deviation*.
+
+```{marginfigure}
+You might be wondering why we square the deviations, then take the square root of the mean of those deviations, rather than taking the absolute values. We could do that -- in fact, there is a measure called the *mean absolute deviation (MAD)*. It's a perfectly fine statistic, but is not as commonly used, as it doesn't have some of the nice mathematical properties that the standard deviation has.
+```
+
+```{r variance}
+class_height <- class_height %>% 
+  mutate(Sq_Deviation = Deviation^2)
+mean(class_height$Sq_Deviation) 
+mean(class_height$Sq_Deviation) %>% sqrt()
+```
+
+Of course, there is an R command that gets us the standard deviation directly. Try
+
+```{r sd}
+sd(class_height$Height)
+```
+
+Notice that we get a slightly different answer than we expected! More on that in a moment.
+
+To summarize, given a population of $n$ with a numeric value $x_i$ for each member of the population, we can calculate the mean: 
+\[\mu = \frac{\sum_{i=1}^{n} x_i}{n}\]
+the variance:
+\[\sigma^2 = \frac{\sum_{i=1}^{n} (x_i-\mu)^2}{n}\]
+and the standard deviation:
+\[\sigma = \sqrt{\frac{\sum_{i=1}^{n} (x_i-\mu)^2}{n}}\]
+
+However, if we have a *sample* of a population, we can only calculate a sample mean and sample variance (and the corresponding sample standard deviation to go with it.) When we collect a sample, we use the sample mean to *estimate* the population mean. Fortunately, this is very intuitive. Given a sample of $n$ members of the population, each with numeric value $x_i$, the sample mean 
+\[\bar{x}=\frac{\sum_{i=1}^{n} x_i}{n}\]
+is a perfectly good estimate for the population mean. 
+
+If we calculate the sample variance in the same way, we get:
+\[s_{n}^{2} = \frac{\sum_{i=1}^{n} (x_i-\bar{x})^2}{n}\]
+
+However, this is *not* the best estimate for the population variance. In fact, this is a *biased* estimate: this estimate is, on average, too small! The corrected, unbiased estimate of the variance is: 
+
+\[s^2 = s_{n-1}^{2} = \frac{\sum_{i=1}^{n} (x_i-\bar{x})^2}{n-1}\]
+
+*Theorem:* Given a population with mean $\mu$ and variance $\sigma^2$, if we were to calculate the sample variance using the formula above
+\[s^{2} = \frac{\sum_{i=1}^{n} (x_i-\bar{x})^2}{n-1}\] for *every possible* sample of $n$ data points: $x_1, x_2, \ldots, x^n$, then the mean of all of these sample variances is the population variance,
+\[\sigma^2 = \frac{\sum_{i=1}^{n} (x_i-\mu)^2}{n}\]
+
+A proof can be found  [here](https://csu-fullerton.primo.exlibrisgroup.com/permalink/01CALS_FUL/oglang/cdi_crossref_primary_10_2307_3026853) (click for link to CSUF Library); I encourage you to read through it. The proof is really no more than some simple algebra. 
+
+Let's demonstrate this with our class height data. 
+
+

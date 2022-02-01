@@ -1,0 +1,30 @@
+```{marginfigure}
+Proof adapted from Stephen A. Book (1979), "Why $n - 1$ in the Formula for the Sample Standard Deviation?" The Two-Year College Mathematics Journal, 10(5), pp. 330-333. You can access this article [here](https://csu-fullerton.primo.exlibrisgroup.com/permalink/01CALS_FUL/oglang/cdi_crossref_primary_10_2307_3026853).
+```
+
+1. Let's begin by writing \[\sum_{i=1}^{n} (x_i-\bar{x})^2=\sum_{i=1}^{n} (x_i-\mu+\mu-\bar{x})^2.\] Now, we have \[\sum_{i=1}^{n} (x_i-\bar{x})^2 = \sum_{i=1}^{n} (x_i-\mu)^2+ 2 \sum_{i=1}^{n} (x_i-\mu)(\mu-\bar{x}) + \sum_{i=1}^{n} (\mu-\bar{x})^2.\] 
+
+2. With a bit of algebra, we get:
+\[\sum_{i=1}^{n} (x_i-\bar{x})^2 = \sum_{i=1}^{n} (x_i-\mu)^2+ 2 (\mu-\bar{x}) \sum_{i=1}^{n} (x_i-\mu) + n (\mu-\bar{x})^2. \]
+Now, looking at the middle term on the right hand side, we have:
+
+\begin{align*}
+2 (\mu-\bar{x}) \sum_{i=1}^{n} (x_i-\mu) &= 2(\mu-\bar{x})\left(\sum_{i=1}^n x_i - \sum_{i=1}^n \mu \right)\\
+&=2(\mu-\bar{x})(n\bar{x}-n\mu)\\
+&=-2n(\bar{x}-\mu)^2
+\end{align*}
+
+3. Finally, we now have:
+
+\begin{align*}
+\sum_{i=1}^{n} (x_i-\bar{x})^2 &= \sum_{i=1}^{n} (x_i-\mu)^2 - 2n(\bar{x}-\mu)^2 + n (\mu-\bar{x})^2 \\
+&= \sum_{i=1}^{n} (x_i-\mu)^2 - n(\bar{x}-\mu)^2 
+\end{align*}
+
+Now, recall that $\sigma^2$ is the mean of all the squared deviations of each individual $w_i$ in the population (whether or not it is part of the sample, which is why we're calling it $w_i$ rather than $x_i$.) In other words, $(w_i-\mu)^2$ is *on average* equal to $\sigma^2$. 
+
+Therefore, $\sum_{i=1}^n (x_i-\mu)^2$ is, on average, equal to $n \sigma^2$, since each $x_i$ is a member of the population as well. Here, "on average" means that if we calculate the mean of $\sum_{i=1}^n (x_i-\mu)^2$ for every possible sample, we get $n \sigma^2$. 
+
+4. I also want to claim that $n(\bar{x}-\mu)^2$ is, on average, $\sigma^2$. This is a consequence of the central limit theorem, which says that the variance of the set of all possible sample means (with sample size $n$) taken from a population is $\frac{\sigma^2}{n}$.
+
+5. Finally, then, from step 3, we know that
