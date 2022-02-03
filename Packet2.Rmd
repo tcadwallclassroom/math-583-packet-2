@@ -293,3 +293,12 @@ county %>% ggplot(aes(x = pop2017)) +
     caption = "county dataset") +
   scale_x_log10()
 ```
+
+## To turn in
+
+For this packet, you should again create a .pdf file using RMarkdown. 
+
+1. Pick a data set from the `openintro` package. You can use `data(package = "openintro")` to see a list of all available data sets in that package. Use `help()` and `glimpse()` to find a good data set with a substantial number of data points, and at least two numeric variables and at least one categorical variable. Use a different data set then of of the ones we have used in class so far. Write a couple of sentences telling me about the data set you chose, and the variables you will be using for your plots.
+2. Create a boxplot with a numerical variable on the x-axis, and a categorical variable on the y-axis. You should see several boxplots, allowing you to compare categories. If you get too many boxplots, you may need to pick a different categorical variable (something with fewer possible values). Give an eyeball estimate of the differences between the groups.
+3. Create a histogram with a different numerical variable on the x-axis, and the count on the y-axis (this is the default for a histogram). Also create dotted/dashed lines for the mean and median. What does this plot tell you?
+4. Read (http://www.sthda.com/english/wiki/ggplot2-histogram-plot-quick-start-guide-r-software-and-data-visualization#change-histogram-plot-colors-by-groups), especially the section titled "Change histogram plot colors by groups." Now, apply this idea to your data set: create the same histogram as in the previous part, but separate out two (or more) groups by color. Again, what does this plot tell you?
