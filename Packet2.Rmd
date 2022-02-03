@@ -4,11 +4,11 @@ runningheader: "Math 583 Packet 2" # only for pdf output
 author: "Todd CadwalladerOlsker"
 date: "`r Sys.Date()`"
 output:
+  tufte::tufte_html:
+    tufte_variant: "envisioned"
   tufte::tufte_handout:
     citation_package: natbib
     latex_engine: xelatex
-  tufte::tufte_html:
-    tufte_variant: "envisioned"
 mainfont: Libertinus Sans
 header-includes: |
     \usepackage{parskip}
@@ -22,12 +22,19 @@ library(tufte)
 library(openintro)
 library(tidyverse)
 library(knitr)
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE, eval = FALSE)
+library(gtools)
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, eval = FALSE, 
+                      tidy=TRUE, tidy.opts=list(width.cutoff=55))
+
 ```
 
 *A .pdf copy of this packet is available at <Packet2.pdf>.*
 
-# Descriptive Statistics
+## Reading
+
+Lightly read OpenIntro Statistics, p. 41 -- 55.
+
+## Descriptive Statistics
 
 In order to describe a data set, we need to *summarize* it. The phrase "Exploratory Data Analysis" is used in *Introduction to Modern Statistics*. We can summarize data by visualizing it, describing it numerically, or (even better) doing some of each. 
 
@@ -37,7 +44,7 @@ I'll try to keep these packets brief, they won't contain everything there is to 
 
 ## Medians, Quartiles, and the Five-Number Summary
 
-When we look at **numeric** variables, we can look at *median*-based statistics or *mean*-based statistics. The *median* is the value of the middle data point (or when there are an even number of data points, the value halfway between the two middle data points). In R, we can find the median of a data set with:
+When we look at **numeric** variables, we can look at *median*-based statistics or *mean*-based statistics. The *median* is the value of the middle data point (or when there are an even number of data points, the value halfway between the two middle data points). In R, we can find the median of a data set (in the example, the `poverty` variable in the `county` dataset) with:
 
 ```{r median1}
 median(county$poverty,na.rm = TRUE)
@@ -86,22 +93,22 @@ We can visualize the five number summary as a plot:
 
 ```{r boxplot1}
 county %>% na.omit(poverty) %>% ggplot(aes(x = poverty)) +
-  stat_boxplot(coef = 10, geom = "errorbar") + 
-  geom_boxplot(coef = 10)
+  stat_boxplot(geom = "errorbar") + 
+  geom_boxplot()
 ```
 
 Traditionally, the boxplot includes vertical lines for each of the five numbers in the summary.
 
-A couple of things are going on here: First, notice that we needed to add "error bars" to visualize the whiskers, gglot does not include them as standard. 
+A couple of things are going on here: First, notice that we needed to add "error bars" to visualize the whiskers, ggplot does not include them as standard. 
 
-Second, notice that we set `coef = 10`. What does that mean? 
+Second, notice that we have some *outliers*. By default, the whiskers of the boxplot are at the maximum and minimum, *unless* there are any values more than $1.5 \times \text{IQR}$ above Q3, or below Q1. Values outside this region are outliers. This is only one possible guideline for identifying outliers; it may or may not be a good guideline, depending on the data. We can override this if we need to by adding `coef = 10` (or some other large number) to the `stat_boxplot` and `geom_boxplot` command. This overrides the multiple of the IQR needed to call something an outlier.
 
 Third, notice that we have values on a vertical axis. These are meaningless, we can suppress those with the following code: 
 
 ```{r boxplot2}
 county %>% na.omit(poverty) %>% ggplot(aes(x = poverty)) +
-  stat_boxplot(geom = "errorbar") + 
-  geom_boxplot() +
+  stat_boxplot(geom = "errorbar", coef = 10) + 
+  geom_boxplot(coef = 10) +
   labs(title = "Poverty Rates of U.S. Counties",
        y = NULL, 
        x = "Poverty rate",
@@ -110,8 +117,23 @@ county %>% na.omit(poverty) %>% ggplot(aes(x = poverty)) +
   scale_y_continuous(breaks = NULL, labels = NULL)
 ```
 
-Also notice I left off `coef = 10` this time. Most of the highest-poverty counties are considered "outliers", as they are more than 1.5 times the IQR away from the median. This is only one possible definition of "outliers", and it may or may not be a good definition, depending on the data. The `coef` variable overrides this by changing the number of multiples of the IQR we need to be from the median before we call something an outlier. Use `help(geom_boxplot)` for more.
+Also notice I added `coef = 10` this time. Use `help(geom_boxplot)` for more.
 
+Boxplots are often used to compare two groups. Try adding a y-axis for a category, like `metro`:
+
+```{r boxplot3}
+county %>% na.omit(poverty) %>% ggplot(aes(x = poverty, y = metro)) +
+  stat_boxplot(geom = "errorbar") + 
+  geom_boxplot() +
+  labs(title = "Poverty Rates of U.S. Counties",
+       y = "Metropolitan Area", 
+       x = "Poverty rate",
+       subtitle = "Percentage of residents living in poverty",
+       caption = "Source: county dataset") + 
+  scale_x_log10()
+```
+
+Before continuing, try to create a boxplot for the `pop2017` variable of the `county` dataset. You should see that the boxplot is not very useful as-is. Try adding `scale_x_log10()` to your plot, and see how it changes! This is a commonly used *transformation* of the data.
 
 ## Mean, Variance, and Standard Deviation
 
@@ -121,20 +143,27 @@ In many cases, the *mean* is a more useful measurement than the median. In many 
 The mean is more useful in the sense that we can do a lot more with it, but it is not as *robust* as the median. It's much more sensitive to outliers and skewed data.
 ```
 
+Take a look at the `census` data set:
+
+```{r mean}
+# It's a good habit to look at the help file first!
+help(census) # You can also just use ?census as a shortcut
+glimpse(census)
+mean(census$age)
+summary(census$age)
+```
+
 The natural measure of spread to pair with the mean is the *variance*, or the *standard deviation*. The definition of variance starts with a natural idea: let's measure the distance between the value of each data point and the mean (this is the *deviation from the mean* or just *deviation* of each data point). Then, we could find the average deviation. 
 
-Let's try this out: suppose we are looking at the population of people in this class, and we are interested in each person's height in inches. We want to know the mean, then calculate the average deviation. 
+Let's try this out: Let's find the "mean deviation" for the `age variable in the `census` dataset. 
 
 In R, we can try the following:
 
 ```{r data_ex1}
-Height<- c(...data goes here...)
-  # Enter values in the "c" function, separated by commas
-class_height <- data.frame(Height) 
-mean(class_height$Height)
-class_height <- class_height %>% 
-  mutate(Deviation = Height - mean(class_height$Height))
-mean(class_height$Deviation) %>% round(14)
+mean(census$age)
+census_dev <- census %>% 
+  mutate(Deviation = age - mean(age))
+mean(census_dev$Deviation) %>% round(14)
 ```
 
 ```{marginfigure}
@@ -150,19 +179,20 @@ You might be wondering why we square the deviations, then take the square root o
 ```
 
 ```{r variance}
-class_height <- class_height %>% 
+census_dev <- census_dev %>% 
   mutate(Sq_Deviation = Deviation^2)
-mean(class_height$Sq_Deviation) 
-mean(class_height$Sq_Deviation) %>% sqrt()
+mean(census_dev$Sq_Deviation)
+mean(census_dev$Sq_Deviation) %>% sqrt()
 ```
 
 Of course, there is an R command that gets us the standard deviation directly. Try
 
 ```{r sd}
-sd(class_height$Height)
+var(census$age)
+sd(census$age)
 ```
 
-Notice that we get a slightly different answer than we expected! More on that in a moment.
+Notice that we get  slightly different answers than we expected! More on that in a moment.
 
 To summarize, given a population of $n$ with a numeric value $x_i$ for each member of the population, we can calculate the mean: 
 \[\mu = \frac{\sum_{i=1}^{n} x_i}{n}\]
@@ -182,12 +212,84 @@ However, this is *not* the best estimate for the population variance. In fact, t
 
 \[s^2 = s_{n-1}^{2} = \frac{\sum_{i=1}^{n} (x_i-\bar{x})^2}{n-1}\]
 
+```{marginfigure}
+Check out `help(var)` and `help(sd)`.
+```
+
+In the `census` data, we only have a sample of the data, so we should be calculating the sample variance and sample standard deviation. Fortunately, this is exactly what `var()` and `sd()` do. 
+
+You may be wondering *why* the intuitive idea of using $n$ in the denominator is biased, and why $n-1$ gives us an unbiased estimate. The reason is the following theorem:
+
 *Theorem:* Given a population with mean $\mu$ and variance $\sigma^2$, if we were to calculate the sample variance using the formula above
 \[s^{2} = \frac{\sum_{i=1}^{n} (x_i-\bar{x})^2}{n-1}\] for *every possible* sample of $n$ data points: $x_1, x_2, \ldots, x^n$, then the mean of all of these sample variances is the population variance,
 \[\sigma^2 = \frac{\sum_{i=1}^{n} (x_i-\mu)^2}{n}\]
 
-A proof can be found  [here](https://csu-fullerton.primo.exlibrisgroup.com/permalink/01CALS_FUL/oglang/cdi_crossref_primary_10_2307_3026853) (click for link to CSUF Library); I encourage you to read through it. The proof is really no more than some simple algebra. 
+A proof can be found  [here](https://csu-fullerton.primo.exlibrisgroup.com/permalink/01CALS_FUL/oglang/cdi_crossref_primary_10_2307_3026853) (click for link to CSUF Library); I encourage you to read through it. The proof is mostly simple algebra. 
 
-Let's demonstrate this with our class height data. 
+To get an idea of what's happening, let's look at a variable where we have a small, known population: say, the height (in inches) of everyone in our class.
+
+```{r height}
+height <- c(70,75,77,60,68,67,64,62,72)
+class_data <- data.frame(height)
+
+var(class_data$height)
+var(class_data$height)*(length(class_data$height) - 1) / (length(class_data$height))
+
+var.sample <- function(set) {
+  n <- length(set)
+  sum((set-mean(set))^2) / (n-1)
+}
+
+var.pop <- function(set) {
+  n <- length(set)
+  sum((set-mean(set))^2) / n
+}
+
+var.sample(class_data$height)
+var.pop(class_data$height)
+```
+
+In the code above, we're looking at the difference between the sample variance and population variance in two ways. Next, let's look at the average sample variance over all possible samples (of a certain size)
+
+```{r sample_var_2}
+sample_size <- 3
+# We need the `gtools` package for the next command
+samples <- permutations(length(class_data$height), sample_size, class_data$height, set = F, repeats.allowed = T)
+var_samples <- apply(samples, 1, var.sample)
+mean(var_samples)
+```
+
+Look at the `samples` data set, you should confirm we have every possible way to sample three of our data points. For each set of three, we are finding the sample standard deviation, then averaging the results for all those samples. You should see that this average is, in fact, the *population* standard deviation. 
+
+Let's finish off this packet with some visualizations. A histogram will allow us to summarize data, we can also visualize where the mean and median might be. 
 
 
+```{r histo}
+age_at_mar %>% ggplot(aes(x = age)) +
+  geom_histogram(binwidth = 1, fill="forestgreen", color = "black") +
+  geom_vline(aes(xintercept=mean(age)),
+             color="blue", linetype="dashed", size=1) + 
+  geom_vline(aes(xintercept=median(age)),
+             color="red", linetype="dotted", size=1) +
+  labs(title = "Age at first marriage for 5,534 US women",
+    subtitle = "Dotted red line indicates median, dashed blue line indicates mean.",
+    x = "Age at first marriage",
+    y = "Number of women",
+    caption = "age_at_mar dataset"
+  )
+```
+
+```{r histo2}
+county %>% ggplot(aes(x = pop2017)) +
+  geom_histogram(binwidth = 0.05, fill="forestgreen", color = "black") +
+  geom_vline(aes(xintercept=mean(pop2017,na.rm=T)),
+             color="blue", linetype="dashed", size=1) + 
+  geom_vline(aes(xintercept=median(pop2017,na.rm=T)),
+             color="red", linetype="dotted", size=1) +
+  labs(title = "Population of US counties in 2017",
+    subtitle = "Dotted red line indicates median, dashed blue line indicates mean.",
+    x = "Population",
+    y = "Number of counties",
+    caption = "county dataset") +
+  scale_x_log10()
+```

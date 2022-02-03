@@ -12,7 +12,7 @@
 
 <meta name="author" content="Todd CadwalladerOlsker" />
 
-<meta name="date" content="2022-01-31" />
+<meta name="date" content="2022-02-03" />
 
 <title>Packet 2</title>
 
@@ -59,102 +59,148 @@ if (window.hljs) {
 
 <h1 class="title toc-ignore">Packet 2</h1>
 <h4 class="author">Todd CadwalladerOlsker</h4>
-<h4 class="date">2022-01-31</h4>
+<h4 class="date">2022-02-03</h4>
 
 
 
 <p><em>A .pdf copy of this packet is available at &lt;Packet2.pdf&gt;.</em></p>
-<div id="descriptive-statistics" class="section level1">
-<h1>Descriptive Statistics</h1>
+<div id="reading" class="section level2">
+<h2>Reading</h2>
+<p>Lightly read OpenIntro Statistics, p. 41 – 55.</p>
+</div>
+<div id="descriptive-statistics" class="section level2">
+<h2>Descriptive Statistics</h2>
 <p>In order to describe a data set, we need to <em>summarize</em> it. The phrase “Exploratory Data Analysis” is used in <em>Introduction to Modern Statistics</em>. We can summarize data by visualizing it, describing it numerically, or (even better) doing some of each.</p>
 <p><label for="tufte-mn-1" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-1" class="margin-toggle"><span class="marginnote"><span style="display: block;">I’ll try to keep these packets brief, they won’t contain everything there is to say about the material. You should reference the textbooks and keep your own notes as well.</span></span></p>
+</div>
 <div id="medians-quartiles-and-the-five-number-summary" class="section level2">
 <h2>Medians, Quartiles, and the Five-Number Summary</h2>
-<p>When we look at <strong>numeric</strong> variables, we can look at <em>median</em>-based statistics or <em>mean</em>-based statistics. The <em>median</em> is the value of the middle data point (or when there are an even number of data points, the value halfway between the two middle data points). In R, we can find the median of a data set with:</p>
-<pre class="r"><code>median(county$poverty,na.rm = TRUE)</code></pre>
+<p>When we look at <strong>numeric</strong> variables, we can look at <em>median</em>-based statistics or <em>mean</em>-based statistics. The <em>median</em> is the value of the middle data point (or when there are an even number of data points, the value halfway between the two middle data points). In R, we can find the median of a data set (in the example, the <code>poverty</code> variable in the <code>county</code> dataset) with:</p>
+<pre class="r"><code>median(county$poverty, na.rm = TRUE)</code></pre>
 <p><label for="tufte-mn-2" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-2" class="margin-toggle"><span class="marginnote"><span style="display: block;">In this example, we have the median of the <em>population</em>, since we have information about every county. (well, except for the NAs, but it’s not like we didn’t ask for that information.) This is technically a <em>parameter</em>, not a <em>statistic</em>. If we only take a small sample of the population, then we are calculating the sample median statistic.</span></span></p>
 <p>Here, the <code>na.rm = TRUE</code> tells R to ignore values that have missing data. (Try the command without the <code>na.rm = TRUE</code> and see what happens!) You can also just use <code>median(county$pop2017,TRUE)</code> for the same result.</p>
 <p>Now, a <em>measure of central tendency</em> like the median is not worth very much without a <em>measure of spread</em> to go along with it. For the median, one way to get a handle on the spread is to also report the maximum, minimum, and 1st and 3rd quartile values. Together, these are called a <em>five-number summary</em>.</p>
 <p>To be a bit more technical, the measures of spread are actually the <em>range</em>, which is the difference of the maximum and minimum, and the <em>interquartile range</em>, or IQR, which is the difference of the 3rd and 1st quartiles. The five number summary contains all this information and more.</p>
 <p><label for="tufte-mn-3" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-3" class="margin-toggle"><span class="marginnote"><span style="display: block;">Recall that the 1st quartile is the “median” of the minimum value and the median, while the 3rd quartile is the “median” of the maximum value and the median… sort of. In fact, it’s actually silghtly more complicated than that. For example, consider the simple example of the data <span class="math display"><span class="math display">\[1,2,3,4,5,6,7,8,9,10,11\]</span></span></span> <span style="display: block;">The median is 6, but what should the first quartile be? Should we include 6, and get a median of 3.5, or exclude it, at get a median of 3? Try <code>fivenum(c(1:11))</code> or <code>summary(c(1:11))</code> and see what R does!</span> <span style="display: block;">Now try both of the following:</span> <span style="display: block;"><code>fivenum(c(1:10))</code></span> <span style="display: block;"><code>summary(c(1:10))</code></span> <span style="display: block;">Why do these give different results? If you want to get <em>very</em> deep into the weeds, check out <code>help(“quantile”)</code> and read about the nine different “types” it uses to calculate quantiles. You can choose a type in <code>summary</code> with <code>summary(data,quantile.type=X)</code> where X is the type described in the help file. The R documentation is not very easy to read, but the Mathworld page for Quantile is a bit better, see <a href="https://mathworld.wolfram.com/Quantile.html" class="uri">https://mathworld.wolfram.com/Quantile.html</a>.</span> <span style="display: block;">For example, try <code>summary(c(1:10),quantile.type=2)</code></span></span></p>
-<pre class="r"><code>fivenum(county$poverty) 
-  # The fivenum() function defaults to na.rm = TRUE,
-  # so we don&#39;t need to add it in.
+<pre class="r"><code>fivenum(county$poverty)
+# The fivenum() function defaults to na.rm = TRUE, so
+# we don&#39;t need to add it in.
 
-summary(county$poverty) 
-  # This is a little friendlier to the eyes, 
-  # and also includes the mean.</code></pre>
+summary(county$poverty)
+# This is a little friendlier to the eyes, and also
+# includes the mean.</code></pre>
 <p>We can visualize the five number summary as a plot:</p>
-<pre class="r"><code>county %&gt;% na.omit(poverty) %&gt;% ggplot(aes(x = poverty)) +
-  stat_boxplot(coef = 10, geom = &quot;errorbar&quot;) + 
-  geom_boxplot(coef = 10)</code></pre>
+<pre class="r"><code>county %&gt;%
+    na.omit(poverty) %&gt;%
+    ggplot(aes(x = poverty)) + stat_boxplot(geom = &quot;errorbar&quot;) +
+    geom_boxplot()</code></pre>
 <p>Traditionally, the boxplot includes vertical lines for each of the five numbers in the summary.</p>
-<p>A couple of things are going on here: First, notice that we needed to add “error bars” to visualize the whiskers, gglot does not include them as standard.</p>
-<p>Second, notice that we set <code>coef = 10</code>. What does that mean?</p>
+<p>A couple of things are going on here: First, notice that we needed to add “error bars” to visualize the whiskers, ggplot does not include them as standard.</p>
+<p>Second, notice that we have some <em>outliers</em>. By default, the whiskers of the boxplot are at the maximum and minimum, <em>unless</em> there are any values more than <span class="math inline">\(1.5 \times \text{IQR}\)</span> above Q3, or below Q1. Values outside this region are outliers. This is only one possible guideline for identifying outliers; it may or may not be a good guideline, depending on the data. We can override this if we need to by adding <code>coef = 10</code> (or some other large number) to the <code>stat_boxplot</code> and <code>geom_boxplot</code> command. This overrides the multiple of the IQR needed to call something an outlier.</p>
 <p>Third, notice that we have values on a vertical axis. These are meaningless, we can suppress those with the following code:</p>
-<pre class="r"><code>county %&gt;% na.omit(poverty) %&gt;% ggplot(aes(x = poverty)) +
-  stat_boxplot(geom = &quot;errorbar&quot;) + 
-  geom_boxplot() +
-  labs(title = &quot;Poverty Rates of U.S. Counties&quot;,
-       y = NULL, 
-       x = &quot;Poverty rate&quot;,
-       subtitle = &quot;Percentage of residents living in poverty&quot;,
-       caption = &quot;Source: county dataset&quot;) +
-  scale_y_continuous(breaks = NULL, labels = NULL)</code></pre>
-<p>Also notice I left off <code>coef = 10</code> this time. Most of the highest-poverty counties are considered “outliers”, as they are more than 1.5 times the IQR away from the median. This is only one possible definition of “outliers”, and it may or may not be a good definition, depending on the data. The <code>coef</code> variable overrides this by changing the number of multiples of the IQR we need to be from the median before we call something an outlier. Use <code>help(geom_boxplot)</code> for more.</p>
+<pre class="r"><code>county %&gt;%
+    na.omit(poverty) %&gt;%
+    ggplot(aes(x = poverty)) + stat_boxplot(geom = &quot;errorbar&quot;,
+    coef = 10) + geom_boxplot(coef = 10) + labs(title = &quot;Poverty Rates of U.S. Counties&quot;,
+    y = NULL, x = &quot;Poverty rate&quot;, subtitle = &quot;Percentage of residents living in poverty&quot;,
+    caption = &quot;Source: county dataset&quot;) + scale_y_continuous(breaks = NULL,
+    labels = NULL)</code></pre>
+<p>Also notice I added <code>coef = 10</code> this time. Use <code>help(geom_boxplot)</code> for more.</p>
+<p>Boxplots are often used to compare two groups. Try adding a y-axis for a category, like <code>metro</code>:</p>
+<pre class="r"><code>county %&gt;%
+    na.omit(poverty) %&gt;%
+    ggplot(aes(x = poverty, y = metro)) + stat_boxplot(geom = &quot;errorbar&quot;) +
+    geom_boxplot() + labs(title = &quot;Poverty Rates of U.S. Counties&quot;,
+    y = &quot;Metropolitan Area&quot;, x = &quot;Poverty rate&quot;, subtitle = &quot;Percentage of residents living in poverty&quot;,
+    caption = &quot;Source: county dataset&quot;) + scale_x_log10()</code></pre>
+<p>Before continuing, try to create a boxplot for the <code>pop2017</code> variable of the <code>county</code> dataset. You should see that the boxplot is not very useful as-is. Try adding <code>scale_x_log10()</code> to your plot, and see how it changes! This is a commonly used <em>transformation</em> of the data.</p>
 </div>
 <div id="mean-variance-and-standard-deviation" class="section level2">
 <h2>Mean, Variance, and Standard Deviation</h2>
 <p>In many cases, the <em>mean</em> is a more useful measurement than the median. In many other cases the median is more useful – it depends on the situation. The mean is the sum of the values of our data points, divided by the number of data points – exactly how you learned to calculate the average since forever. The calculation is the same whether we want to calculate a population mean or sample mean.</p>
 <p><label for="tufte-mn-4" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-4" class="margin-toggle"><span class="marginnote"><span style="display: block;">The mean is more useful in the sense that we can do a lot more with it, but it is not as <em>robust</em> as the median. It’s much more sensitive to outliers and skewed data.</span></span></p>
+<p>Take a look at the <code>census</code> data set:</p>
+<pre class="r"><code># It&#39;s a good habit to look at the help file first!
+help(census)  # You can also just use ?census as a shortcut
+glimpse(census)
+mean(census$age)
+summary(census$age)</code></pre>
 <p>The natural measure of spread to pair with the mean is the <em>variance</em>, or the <em>standard deviation</em>. The definition of variance starts with a natural idea: let’s measure the distance between the value of each data point and the mean (this is the <em>deviation from the mean</em> or just <em>deviation</em> of each data point). Then, we could find the average deviation.</p>
-<p>Let’s try this out: suppose we are looking at the population of people in this class, and we are interested in each person’s height in inches. We want to know the mean, then calculate the average deviation.</p>
+<p>Let’s try this out: Let’s find the “mean deviation” for the <code>age variable in the</code>census` dataset.</p>
 <p>In R, we can try the following:</p>
-<pre class="r"><code>Height&lt;- c(...data goes here...)
-  # Enter values in the &quot;c&quot; function, separated by commas
-class_height &lt;- data.frame(Height) 
-mean(class_height$Height)
-class_height &lt;- class_height %&gt;% 
-  mutate(Deviation = Height - mean(class_height$Height))
-mean(class_height$Deviation) %&gt;% round(14)</code></pre>
+<pre class="r"><code>mean(census$age)
+census_dev &lt;- census %&gt;%
+    mutate(Deviation = age - mean(age))
+mean(census_dev$Deviation) %&gt;%
+    round(14)</code></pre>
 <p><label for="tufte-mn-5" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-5" class="margin-toggle"><span class="marginnote"><span style="display: block;">Note the use of <code>round</code> in the last command; here we are rounding to 14 digits. If you just use <code>mean()</code> in the last step, you will get a very small number in scientific notation. The actual value of the mean is in fact 0, but you are seeing a very small number due to a <em>floating point error</em> in R. These are very common in any programming language, and dealing with them is a necessary evil.</span></span></p>
 <p>You should find that the mean deviation is 0! The positive deviations are cancelled out by the negative deviations. This will always happen in any data set, since the average value of the data points is 0 units away from the average. Therefore, this is not a very useful measurement of spread.</p>
 <p>So what can we do? We’ll <em>square</em> the deviations, so that they are all positive! Then, we can take the mean squared deviation, AKA the <em>variance</em>. Finally, the square root of the variance gives us the <em>standard deviation</em>.</p>
 <p><label for="tufte-mn-6" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-6" class="margin-toggle"><span class="marginnote"><span style="display: block;">You might be wondering why we square the deviations, then take the square root of the mean of those deviations, rather than taking the absolute values. We could do that – in fact, there is a measure called the <em>mean absolute deviation (MAD)</em>. It’s a perfectly fine statistic, but is not as commonly used, as it doesn’t have some of the nice mathematical properties that the standard deviation has.</span></span></p>
-<pre class="r"><code>class_height &lt;- class_height %&gt;% 
-  mutate(Sq_Deviation = Deviation^2)
-mean(class_height$Sq_Deviation) 
-mean(class_height$Sq_Deviation) %&gt;% sqrt()</code></pre>
+<pre class="r"><code>census_dev &lt;- census_dev %&gt;%
+    mutate(Sq_Deviation = Deviation^2)
+mean(census_dev$Sq_Deviation)
+mean(census_dev$Sq_Deviation) %&gt;%
+    sqrt()</code></pre>
 <p>Of course, there is an R command that gets us the standard deviation directly. Try</p>
-<pre class="r"><code>sd(class_height$Height)</code></pre>
-<p>Notice that we get a slightly different answer than we expected! More on that in a moment.</p>
+<pre class="r"><code>var(census$age)
+sd(census$age)</code></pre>
+<p>Notice that we get slightly different answers than we expected! More on that in a moment.</p>
 <p>To summarize, given a population of <span class="math inline">\(n\)</span> with a numeric value <span class="math inline">\(x_i\)</span> for each member of the population, we can calculate the mean: <span class="math display">\[\mu = \frac{\sum_{i=1}^{n} x_i}{n}\]</span> the variance: <span class="math display">\[\sigma^2 = \frac{\sum_{i=1}^{n} (x_i-\mu)^2}{n}\]</span> and the standard deviation: <span class="math display">\[\sigma = \sqrt{\frac{\sum_{i=1}^{n} (x_i-\mu)^2}{n}}\]</span></p>
 <p>However, if we have a <em>sample</em> of a population, we can only calculate a sample mean and sample variance (and the corresponding sample standard deviation to go with it.) When we collect a sample, we use the sample mean to <em>estimate</em> the population mean. Fortunately, this is very intuitive. Given a sample of <span class="math inline">\(n\)</span> members of the population, each with numeric value <span class="math inline">\(x_i\)</span>, the sample mean <span class="math display">\[\bar{x}=\frac{\sum_{i=1}^{n} x_i}{n}\]</span> is a perfectly good estimate for the population mean.</p>
-<p>If we calculate the sample variance in the same way, we get: <span class="math display">\[s^{2*} = \frac{\sum_{i=1}^{n} (x_i-\bar{x})^2}{n}\]</span></p>
-<p>However, this is <em>not</em> the best estimate for the population standard deviation. In fact, this is a <em>biased</em> estimate: this estimate is always too small!</p>
-<p>To see this, let’s prove the following theorem. Look at the proof steps below, and see if you can justify each step.</p>
-<p><em>Theorem:</em> Given any sample of <span class="math inline">\(n\)</span> values taken from a population, <span class="math inline">\(x_1, x_2, \ldots, x_n\)</span>, then <span class="math display">\[\sum_{i=1}^{n} (x_i-\bar{x})^2 \leq \sum_{i=1}^{n} (x_i-\mu)^2\]</span></p>
-<p><label for="tufte-mn-7" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-7" class="margin-toggle"><span class="marginnote"><span style="display: block;">This is the same statement, but with both sides multiplied by <span class="math inline"><span class="math inline">\(n\)</span></span> to make our lives a bit easier.</span></span></p>
-<ol style="list-style-type: decimal">
-<li><p>We can write <span class="math display">\[\sum_{i=1}^{n} (x_i-\bar{x})^2=\sum_{i=1}^{n} (x_i-\mu+\mu-\bar{x})^2.\]</span> Why?</p></li>
-<li><p>Now, we have <span class="math display">\[\sum_{i=1}^{n} (x_i-\bar{x})^2 = \sum_{i=1}^{n} (x_i-\mu)^2+ 2 \sum_{i=1}^{n} (x_i-\mu)(\mu-\bar{x}) + \sum_{i=1}^{n} (\mu-\bar{x})^2.\]</span> Why?</p></li>
-<li><p>With a bit of algebra, we get: <span class="math display">\[\sum_{i=1}^{n} (x_i-\bar{x})^2 = \sum_{i=1}^{n} (x_i-\mu)^2+ 2 (\mu-\bar{x}) \sum_{i=1}^{n} (x_i-\mu) + n (\mu-\bar{x})^2. \]</span> Now, looking at the middle term on the right hand side, we have:</p></li>
-</ol>
-<p><span class="math display">\[\begin{align*}
-2 (\mu-\bar{x}) \sum_{i=1}^{n} (x_i-\mu) &amp;= 2(\mu-\bar{x})\left(\sum_{i=1}^n x_i - \sum_{i=1}^n \mu \right)\\
-&amp;=2(\mu-\bar{x})(n\bar{x}-n\mu)\\
-&amp;=-2n(\bar{x}-\mu)^2
-\end{align*}\]</span></p>
-<p>Explain why the last two steps of the algebra work.</p>
-<ol start="4" style="list-style-type: decimal">
-<li>Finally, we now have:</li>
-</ol>
-<p><span class="math display">\[\begin{align*}
-\sum_{i=1}^{n} (x_i-\bar{x})^2 &amp;= \sum_{i=1}^{n} (x_i-\mu)^2 - 2n(\bar{x}-\mu)^2 + n (\mu-\bar{x})^2 \\
-&amp;= \sum_{i=1}^{n} (x_i-\mu)^2 - n(\bar{x}-\mu)^2 
-\end{align*}\]</span></p>
-<p>This finishes the proof of the theorem. Why?</p>
-</div>
+<p>If we calculate the sample variance in the same way, we get: <span class="math display">\[s_{n}^{2} = \frac{\sum_{i=1}^{n} (x_i-\bar{x})^2}{n}\]</span></p>
+<p>However, this is <em>not</em> the best estimate for the population variance. In fact, this is a <em>biased</em> estimate: this estimate is, on average, too small! The corrected, unbiased estimate of the variance is:</p>
+<p><span class="math display">\[s^2 = s_{n-1}^{2} = \frac{\sum_{i=1}^{n} (x_i-\bar{x})^2}{n-1}\]</span></p>
+<p><label for="tufte-mn-7" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-7" class="margin-toggle"><span class="marginnote"><span style="display: block;">Check out <code>help(var)</code> and <code>help(sd)</code>.</span></span></p>
+<p>In the <code>census</code> data, we only have a sample of the data, so we should be calculating the sample variance and sample standard deviation. Fortunately, this is exactly what <code>var()</code> and <code>sd()</code> do.</p>
+<p>You may be wondering <em>why</em> the intuitive idea of using <span class="math inline">\(n\)</span> in the denominator is biased, and why <span class="math inline">\(n-1\)</span> gives us an unbiased estimate. The reason is the following theorem:</p>
+<p><em>Theorem:</em> Given a population with mean <span class="math inline">\(\mu\)</span> and variance <span class="math inline">\(\sigma^2\)</span>, if we were to calculate the sample variance using the formula above <span class="math display">\[s^{2} = \frac{\sum_{i=1}^{n} (x_i-\bar{x})^2}{n-1}\]</span> for <em>every possible</em> sample of <span class="math inline">\(n\)</span> data points: <span class="math inline">\(x_1, x_2, \ldots, x^n\)</span>, then the mean of all of these sample variances is the population variance, <span class="math display">\[\sigma^2 = \frac{\sum_{i=1}^{n} (x_i-\mu)^2}{n}\]</span></p>
+<p>A proof can be found <a href="https://csu-fullerton.primo.exlibrisgroup.com/permalink/01CALS_FUL/oglang/cdi_crossref_primary_10_2307_3026853">here</a> (click for link to CSUF Library); I encourage you to read through it. The proof is mostly simple algebra.</p>
+<p>To get an idea of what’s happening, let’s look at a variable where we have a small, known population: say, the height (in inches) of everyone in our class.</p>
+<pre class="r"><code>height &lt;- c(70, 75, 77, 60, 68, 67, 64, 62, 72)
+class_data &lt;- data.frame(height)
+
+var(class_data$height)
+var(class_data$height) * (length(class_data$height) - 1)/(length(class_data$height))
+
+var.sample &lt;- function(set) {
+    n &lt;- length(set)
+    sum((set - mean(set))^2)/(n - 1)
+}
+
+var.pop &lt;- function(set) {
+    n &lt;- length(set)
+    sum((set - mean(set))^2)/n
+}
+
+var.sample(class_data$height)
+var.pop(class_data$height)</code></pre>
+<p>In the code above, we’re looking at the difference between the sample variance and population variance in two ways. Next, let’s look at the average sample variance over all possible samples (of a certain size)</p>
+<pre class="r"><code>sample_size &lt;- 3
+# We need the `gtools` package for the next command
+samples &lt;- permutations(length(class_data$height), sample_size,
+    class_data$height, set = F, repeats.allowed = T)
+var_samples &lt;- apply(samples, 1, var.sample)
+mean(var_samples)</code></pre>
+<p>Look at the <code>samples</code> data set, you should confirm we have every possible way to sample three of our data points. For each set of three, we are finding the sample standard deviation, then averaging the results for all those samples. You should see that this average is, in fact, the <em>population</em> standard deviation.</p>
+<p>Let’s finish off this packet with some visualizations. A histogram will allow us to summarize data, we can also visualize where the mean and median might be.</p>
+<pre class="r"><code>age_at_mar %&gt;%
+    ggplot(aes(x = age)) + geom_histogram(binwidth = 1,
+    fill = &quot;forestgreen&quot;, color = &quot;black&quot;) + geom_vline(aes(xintercept = mean(age)),
+    color = &quot;blue&quot;, linetype = &quot;dashed&quot;, size = 1) + geom_vline(aes(xintercept = median(age)),
+    color = &quot;red&quot;, linetype = &quot;dotted&quot;, size = 1) + labs(title = &quot;Age at first marriage for 5,534 US women&quot;,
+    subtitle = &quot;Dotted red line indicates median, dashed blue line indicates mean.&quot;,
+    x = &quot;Age at first marriage&quot;, y = &quot;Number of women&quot;,
+    caption = &quot;age_at_mar dataset&quot;)</code></pre>
+<pre class="r"><code>county %&gt;%
+    ggplot(aes(x = pop2017)) + geom_histogram(binwidth = 0.05,
+    fill = &quot;forestgreen&quot;, color = &quot;black&quot;) + geom_vline(aes(xintercept = mean(pop2017,
+    na.rm = T)), color = &quot;blue&quot;, linetype = &quot;dashed&quot;, size = 1) +
+    geom_vline(aes(xintercept = median(pop2017, na.rm = T)),
+        color = &quot;red&quot;, linetype = &quot;dotted&quot;, size = 1) +
+    labs(title = &quot;Population of US counties in 2017&quot;, subtitle = &quot;Dotted red line indicates median, dashed blue line indicates mean.&quot;,
+        x = &quot;Population&quot;, y = &quot;Number of counties&quot;, caption = &quot;county dataset&quot;) +
+    scale_x_log10()</code></pre>
 </div>
 
 
